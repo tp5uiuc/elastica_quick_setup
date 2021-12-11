@@ -21,7 +21,7 @@ mkdir -p "${DOWNLOAD_PATH}" && cd "${DOWNLOAD_PATH}" || exit
 echo "Building Blaze"
 BLAZE_REPO="https://bitbucket.org/blaze-lib/blaze.git"
 BLAZE_PATH="${DOWNLOAD_PATH}/blaze/"
-if [ -d "${BLAZE_PATH}"]; then
+if [ -d "${BLAZE_PATH}" ]; then
 	# Get the latest version
 	cd "${BLAZE_PATH}" && git pull origin
 else
