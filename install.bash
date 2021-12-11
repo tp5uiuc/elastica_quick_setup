@@ -21,7 +21,12 @@ mkdir -p "${DOWNLOAD_PATH}" && cd "${DOWNLOAD_PATH}" || exit
 echo "Building Blaze"
 BLAZE_REPO="https://bitbucket.org/blaze-lib/blaze.git"
 BLAZE_PATH="${DOWNLOAD_PATH}/blaze/"
-git clone --depth 1 "${BLAZE_REPO}" "${BLAZE_PATH}" || fail "Could not clone blaze"
+if [ -d "${BLAZE_PATH}"]; then
+	# Get the latest version
+	cd "${BLAZE_PATH}" && git pull origin
+else
+	git clone --depth 1 "${BLAZE_REPO}" "${BLAZE_PATH}" || fail "Could not clone blaze"
+fi
 cp "${SCRIPT_DIR}/build_blaze.sh" "${BLAZE_PATH}" && cd "${BLAZE_PATH}" || exit
 source build_blaze.sh "${INSTALL_PATH}" || fail "Could not build blaze"
 
