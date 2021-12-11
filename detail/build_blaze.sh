@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Blaze automatically installs in the blaze subdirectory
-BLAZE_INSTALL_PATH="${HOME}/Desktop/third_party_installed/"
+BLAZE_INSTALL_PATH="$1"
 mkdir -p "${BLAZE_INSTALL_PATH}"
 mkdir -p build && cd "$_" || exit
 

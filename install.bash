@@ -12,6 +12,7 @@ fi
 
 # Path to download header only libraries
 DOWNLOAD_PATH="${HOME}/Desktop/third_party/"
+INSTALL_PATH="${HOME}/Desktop/third_party_installed/"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 mkdir -p "${DOWNLOAD_PATH}" && cd "${DOWNLOAD_PATH}" || exit
@@ -22,7 +23,7 @@ BLAZE_REPO="https://bitbucket.org/blaze-lib/blaze.git"
 BLAZE_PATH="${DOWNLOAD_PATH}/blaze/"
 git clone --depth 1 "${BLAZE_REPO}" "${BLAZE_PATH}" || fail "Could not clone blaze"
 cp "${SCRIPT_DIR}/build_blaze.sh" "${BLAZE_PATH}" && cd "${BLAZE_PATH}" || exit
-source build_blaze.sh || fail "Could not build blaze"
+source build_blaze.sh "${INSTALL_PATH}" || fail "Could not build blaze"
 
 # BLAZE_TENSOR_REPO="https://github.com/STEllAR-GROUP/blaze_tensor.git"
 # git clone --depth 1 "${BLAZE_TENSOR_REPO}"
