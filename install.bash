@@ -27,7 +27,7 @@ if [ -d "${BLAZE_PATH}" ]; then
 else
 	git clone --depth 1 "${BLAZE_REPO}" "${BLAZE_PATH}" || fail "Could not clone blaze"
 fi
-cp "${SCRIPT_DIR}/build_blaze.sh" "${BLAZE_PATH}" && cd "${BLAZE_PATH}" || exit
+cp "${SCRIPT_DIR}/detail/build_blaze.sh" "${BLAZE_PATH}" && cd "${BLAZE_PATH}" || exit
 source build_blaze.sh "${INSTALL_PATH}" || fail "Could not build blaze"
 
 # BLAZE_TENSOR_REPO="https://github.com/STEllAR-GROUP/blaze_tensor.git"
@@ -35,3 +35,9 @@ source build_blaze.sh "${INSTALL_PATH}" || fail "Could not build blaze"
 
 # BRIGAND_REPO="https://github.com/edouarda/brigand.git"
 # git clone --depth 1 "${BRIGAND_REPO}"
+
+touch ~/.localrc
+
+if [ ! -v BLAZE_ROOT ]; then
+  echo "export BLAZE_ROOT='${INSTALL_PATH}'" >> ~/.localrc
+fi
