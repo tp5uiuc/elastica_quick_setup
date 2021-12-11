@@ -42,7 +42,18 @@ fi
 cp "${SCRIPT_DIR}/detail/build_blaze_tensor.sh" "${BLAZE_TENSOR_PATH}" && cd "${BLAZE_TENSOR_PATH}" || exit
 source build_blaze_tensor.sh "${INSTALL_PATH}" || fail "Could not build blaze_tensor"
 
-# BRIGAND_REPO="https://github.com/edouarda/brigand.git"
+echo "Building Brigand"
+BRIGAND_REPO="https://github.com/edouarda/brigand.git"
+BRIGAND_PATH="${DOWNLOAD_PATH}/brigand/"
+if [ -d "${BRIGAND_PATH}" ]; then
+	# Get the latest version
+	cd "${BRIGAND_PATH}" && git pull origin
+else
+	git clone --depth 1 "${BRIGAND_REPO}" "${BRIGAND_PATH}" || fail "Could not clone brigand"
+fi
+cp "${SCRIPT_DIR}/detail/build_brigand.sh" "${BRIGAND_PATH}" && cd "${BRIGAND_PATH}" || exit
+source build_brigand.sh "${INSTALL_PATH}" || fail "Could not build brigand"
+
 # git clone --depth 1 "${BRIGAND_REPO}"
 
 touch ~/.localrc
@@ -52,4 +63,7 @@ if [ ! -v BLAZE_ROOT ]; then
 fi
 if [ ! -v BLAZE_TENSOR_ROOT ]; then
 	echo "export BLAZE_TENSOR_ROOT='${INSTALL_PATH}'" >>~/.localrc
+fi
+if [ ! -v BRIGAND_ROOT ]; then
+	echo "export BRIGAND_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
