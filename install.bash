@@ -30,8 +30,17 @@ fi
 cp "${SCRIPT_DIR}/detail/build_blaze.sh" "${BLAZE_PATH}" && cd "${BLAZE_PATH}" || exit
 source build_blaze.sh "${INSTALL_PATH}" || fail "Could not build blaze"
 
-# BLAZE_TENSOR_REPO="https://github.com/STEllAR-GROUP/blaze_tensor.git"
-# git clone --depth 1 "${BLAZE_TENSOR_REPO}"
+echo "Building BlazeTensor"
+BLAZE_TENSOR_REPO="https://github.com/STEllAR-GROUP/blaze_tensor.git"
+BLAZE_TENSOR_PATH="${DOWNLOAD_PATH}/blaze_tensor/"
+if [ -d "${BLAZE_TENSOR_PATH}" ]; then
+	# Get the latest version
+	cd "${BLAZE_TENSOR_PATH}" && git pull origin
+else
+	git clone --depth 1 "${BLAZE_TENSOR_REPO}" "${BLAZE_TENSOR_PATH}" || fail "Could not clone blaze_tensor"
+fi
+cp "${SCRIPT_DIR}/detail/build_blaze_tensor.sh" "${BLAZE_TENSOR_PATH}" && cd "${BLAZE_TENSOR_PATH}" || exit
+source build_blaze_tensor.sh "${INSTALL_PATH}" || fail "Could not build blaze_tensor"
 
 # BRIGAND_REPO="https://github.com/edouarda/brigand.git"
 # git clone --depth 1 "${BRIGAND_REPO}"
@@ -39,5 +48,8 @@ source build_blaze.sh "${INSTALL_PATH}" || fail "Could not build blaze"
 touch ~/.localrc
 
 if [ ! -v BLAZE_ROOT ]; then
-  echo "export BLAZE_ROOT='${INSTALL_PATH}'" >> ~/.localrc
+	echo "export BLAZE_ROOT='${INSTALL_PATH}'" >>~/.localrc
+fi
+if [ ! -v BLAZE_TENSOR_ROOT ]; then
+	echo "export BLAZE_TENSOR_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
