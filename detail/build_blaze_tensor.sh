@@ -23,7 +23,8 @@ if [ -z "${CXX}" ] && g++ --version | grep -q '[Gg][Cc][Cc]'; then
 fi
 if [ -z "${CXX}" ]; then
 	# We have no hope, fall back on XZ's g++
-	CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
+	CXX="/usr/local/bin/g++"
+	# CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
 fi
 
 cmake -DCMAKE_INSTALL_PREFIX="${BLAZE_TENSOR_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}" -Dblaze_DIR="${BLAZE_PATH}" ..

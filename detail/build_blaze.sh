@@ -17,13 +17,12 @@ for cxx_ver in "${CXX_ver_arr[@]}"; do
 	fi
 done
 # Check if not set, else set it
-if [ -z "${CXX}" ] && c++ --version | grep -q '[Gg][Cc][Cc]'; then
-	CXX="c++"
+if [ -z "${CXX}" ] && g++ --version | grep -q '[Gg][Cc][Cc]'; then
+	CXX="g++"
 fi
 if [ -z "${CXX}" ]; then
 	# We have no hope, fall back on XZ's g++
-	echo "Last case"
-	CXX="/usr/local/bin/g++-9"
+	CXX="/usr/local/bin/g++"
 fi
 
 cmake .. -DCMAKE_INSTALL_PREFIX="${BLAZE_INSTALL_PATH}" \
