@@ -57,7 +57,7 @@ function setup_library() {
 setup_library "blaze" "https://bitbucket.org/blaze-lib/blaze.git"
 setup_library "blaze_tensor" "https://github.com/STEllAR-GROUP/blaze_tensor.git"
 setup_library "brigand" "https://github.com/edouarda/brigand.git"
-# setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
+setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
@@ -71,9 +71,9 @@ fi
 if [ ! -v BRIGAND_ROOT ]; then
 	echo "export BRIGAND_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
-# if [ ! -v CXXOPTS_ROOT ]; then
-# 	echo "export CXXOPTS_ROOT='${INSTALL_PATH}'" >>~/.localrc
-# fi
+if [ ! -v CXXOPTS_ROOT ]; then
+	echo "export CXXOPTS_ROOT='${INSTALL_PATH}'" >>~/.localrc
+fi
 
 read -rd '' finalmessage <<-EOF
 	    The path to the libraries just installed are appended to the file ~/.localrc. To ensure that the paths are exported, please run the following command:
