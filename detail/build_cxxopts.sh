@@ -26,6 +26,6 @@ if [ -z "${CXX}" ]; then
 	# CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
 fi
 
-cmake .. -DCMAKE_INSTALL_PREFIX="${CXXOPTS_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}"
+cmake .. -DCMAKE_INSTALL_PREFIX="${CXXOPTS_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}" -DCXXOPTS_BUILD_EXAMPLES=OFF -DCXXOPTS_BUILD_TESTS=OFF
 # make standalone
 make install

@@ -13,14 +13,14 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.bash <options>
-
+	
 	options and explanations
 	---------------------------
 	  help : Print this help message
-
+	
 	  dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-
+	
 	  installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
 EOF
