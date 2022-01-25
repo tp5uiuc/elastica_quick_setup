@@ -31,50 +31,33 @@ if [[ $1 =~ ^([hH][eE][lL][pP]|[hH])$ ]]; then
 fi
 
 # Path to download header only libraries
-DOWNLOAD_PATH=${1:-"${HOME}/Desktop/third_party/"}
-INSTALL_PATH=${2:-"${HOME}/Desktop/third_party_installed/"}
+DOWNLOAD_PATH=${1:-"${HOME}/Desktop/third_party"}
+INSTALL_PATH=${2:-"${HOME}/Desktop/third_party_installed"}
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 mkdir -p "${DOWNLOAD_PATH}" && cd "${DOWNLOAD_PATH}" || exit
 
-# Install blaze, blaze_tensor and brigand
-echo "Building Blaze"
-BLAZE_REPO="https://bitbucket.org/blaze-lib/blaze.git"
-BLAZE_PATH="${DOWNLOAD_PATH}/blaze/"
-if [ -d "${BLAZE_PATH}" ]; then
-	# Get the latest version
-	cd "${BLAZE_PATH}" && git pull origin
-else
-	git clone --depth 1 "${BLAZE_REPO}" "${BLAZE_PATH}" || fail "Could not clone blaze"
-fi
-cp "${SCRIPT_DIR}/detail/build_blaze.sh" "${BLAZE_PATH}" && cd "${BLAZE_PATH}" || exit
-source build_blaze.sh "${INSTALL_PATH}" || fail "Could not build blaze"
+function setup_library() {
+	local name=$1
+	local repo=$2
+	local script_name="${3:-"build_${name}"}.sh"
 
-echo "Building BlazeTensor"
-BLAZE_TENSOR_REPO="https://github.com/STEllAR-GROUP/blaze_tensor.git"
-BLAZE_TENSOR_PATH="${DOWNLOAD_PATH}/blaze_tensor/"
-if [ -d "${BLAZE_TENSOR_PATH}" ]; then
-	# Get the latest version
-	cd "${BLAZE_TENSOR_PATH}" && git pull origin
-else
-	git clone --depth 1 "${BLAZE_TENSOR_REPO}" "${BLAZE_TENSOR_PATH}" || fail "Could not clone blaze_tensor"
-fi
-cp "${SCRIPT_DIR}/detail/build_blaze_tensor.sh" "${BLAZE_TENSOR_PATH}" && cd "${BLAZE_TENSOR_PATH}" || exit
-source build_blaze_tensor.sh "${INSTALL_PATH}" || fail "Could not build blaze_tensor"
+	echo "Building ${name}"
+	local repo_path="${DOWNLOAD_PATH}/${name}/"
+	if [ -d "${repo_path}" ]; then
+		# Get the latest version
+		cd "${repo_path}" && git pull origin
+	else
+		git clone --depth 1 "${repo}" "${repo_path}" || fail "Could not clone ${name}"
+	fi
+	cp "${SCRIPT_DIR}/detail/${script_name}" "${repo_path}" && cd "${repo_path}" || exit
+	source "${script_name}" "${INSTALL_PATH}" || fail "Could not build ${name}"
+}
 
-echo "Building Brigand"
-BRIGAND_REPO="https://github.com/edouarda/brigand.git"
-BRIGAND_PATH="${DOWNLOAD_PATH}/brigand/"
-if [ -d "${BRIGAND_PATH}" ]; then
-	# Get the latest version
-	cd "${BRIGAND_PATH}" && git pull origin
-else
-	git clone --depth 1 "${BRIGAND_REPO}" "${BRIGAND_PATH}" || fail "Could not clone brigand"
-fi
-cp "${SCRIPT_DIR}/detail/build_brigand.sh" "${BRIGAND_PATH}" && cd "${BRIGAND_PATH}" || exit
-source build_brigand.sh "${INSTALL_PATH}" || fail "Could not build brigand"
-
-# git clone --depth 1 "${BRIGAND_REPO}"
+setup_library "blaze" "https://bitbucket.org/blaze-lib/blaze.git"
+setup_library "blaze_tensor" "https://github.com/STEllAR-GROUP/blaze_tensor.git"
+setup_library "brigand" "https://github.com/edouarda/brigand.git"
+# setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
@@ -88,6 +71,9 @@ fi
 if [ ! -v BRIGAND_ROOT ]; then
 	echo "export BRIGAND_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
+# if [ ! -v CXXOPTS_ROOT ]; then
+# 	echo "export CXXOPTS_ROOT='${INSTALL_PATH}'" >>~/.localrc
+# fi
 
 read -rd '' finalmessage <<-EOF
 	    The path to the libraries just installed are appended to the file ~/.localrc. To ensure that the paths are exported, please run the following command:
@@ -104,3 +90,8 @@ elif [ ! -z "${BASH_VERSION}" ]; then
 else
 	fail "shell not recognized, please source localrc manually"
 fi
+
+unset -f setup_library
+unset SCRIPT_DIR
+unset INSTALL_PATH
+unset DOWNLOAD_PATH
