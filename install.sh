@@ -72,7 +72,7 @@ if [ ! -v BRIGAND_ROOT ]; then
 	echo "export BRIGAND_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 if [ ! -v CXXOPTS_ROOT ]; then
-	echo "export CXXOPTS_ROOT='${INSTALL_PATH}'" >>~/.localrc
+	echo "export cxxopts_DIR='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
