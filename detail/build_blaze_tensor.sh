@@ -18,7 +18,7 @@ for cxx_ver in "${CXX_ver_arr[@]}"; do
 	fi
 done
 # Check if not set, else set it
-if [ -z "${CXX}" ] && g++ --version | grep -q '[Gg][Cc][Cc]'; then
+if [ -z "${CXX}" ] && g++ --version; then
 	CXX="g++"
 fi
 if [ -z "${CXX}" ]; then
