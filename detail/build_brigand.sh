@@ -1,9 +1,12 @@
 #!/usr/bin/env sh
 
 # BRIGAND automatically installs in the brigand subdirectory
-BRIGAND_INSTALL_PATH="${1}"
-mkdir -p "${BRIGAND_INSTALL_PATH}"
-mkdir -p build && cd "$_" || exit
+BRIGAND_BUILD_DIR="build"
+BRIGAND_INSTALL_PREFIX=${1:-"${HOME}/Desktop/third_party_installed"}
+
+mkdir -p "${BRIGAND_INSTALL_PREFIX}"
+
+# mkdir -p build && cd "$_" || exit
 
 # check gcc version starting from 9 on to 4
 version_array=($(seq 9 -1 4))
@@ -26,6 +29,16 @@ if [ -z "${CXX}" ]; then
 	# CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
 fi
 
-cmake .. -DCMAKE_INSTALL_PREFIX="${BRIGAND_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}"
-# make standalone
-make install
+# cmake .. -DCMAKE_INSTALL_PREFIX="${BRIGAND_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}"
+# # make standalone
+# make install
+
+cmake -B "${BRIGAND_BUILD_DIR}" \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_CXX_COMPILER="${CXX}" \
+	-S .
+cmake --build "${BRIGAND_BUILD_DIR}"
+cmake --install "${BRIGAND_BUILD_DIR}" --prefix "${BRIGAND_INSTALL_PREFIX}"
+
+unset BRIGAND_BUILD_DIR
+unset BRIGAND_INSTALL_PREFIX
