@@ -1,9 +1,11 @@
 #!/usr/bin/env sh
 
 # Blaze automatically installs in the blaze subdirectory
-BLAZE_INSTALL_PATH="$1"
-mkdir -p "${BLAZE_INSTALL_PATH}"
-mkdir -p build && cd "$_" || exit
+BLAZE_BUILD_DIR="build"
+BLAZE_INSTALL_PREFIX=${1:-"${HOME}/Desktop/third_party_installed"}
+mkdir -p "${BLAZE_INSTALL_PREFIX}"
+
+# mkdir -p build && cd "$_" || exit
 
 # check gcc version starting from 9 on to 4
 version_array=($(seq 11 -1 4))
@@ -25,8 +27,22 @@ if [ -z "${CXX}" ]; then
 	CXX="/usr/local/bin/g++"
 fi
 
-cmake .. -DCMAKE_INSTALL_PREFIX="${BLAZE_INSTALL_PATH}" \
+# cmake .. -DCMAKE_INSTALL_PREFIX="${BLAZE_INSTALL_PATH}" \
+# 	-DCMAKE_CXX_COMPILER="${CXX}" \
+# 	-DBLAZE_SHARED_MEMORY_PARALLELIZATION=OFF \
+# 	-DUSE_LAPACK=OFF
+# make install
+
+# >3.14
+# -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+cmake -B "${BLAZE_BUILD_DIR}" \
+	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_CXX_COMPILER="${CXX}" \
 	-DBLAZE_SHARED_MEMORY_PARALLELIZATION=OFF \
-	-DUSE_LAPACK=OFF
-make install
+	-DUSE_LAPACK=OFF \
+	-S .
+cmake --build "${BLAZE_BUILD_DIR}"
+cmake --install "${BLAZE_BUILD_DIR}" --prefix "${BLAZE_INSTALL_PREFIX}"
+
+unset BLAZE_BUILD_DIR
+unset BLAZE_INSTALL_PREFIX
