@@ -1,10 +1,13 @@
 #!/usr/bin/env sh
 
 # Blaze automatically installs in the blaze subdirectory
-BLAZE_TENSOR_INSTALL_PATH="$1"
+BLAZE_TENSOR_BUILD_DIR="build"
+BLAZE_TENSOR_INSTALL_PREFIX=${1:-"${HOME}/Desktop/third_party_installed"}
+
 BLAZE_PATH="${1}/share/blaze/cmake/"
-mkdir -p "${BLAZE_TENSOR_INSTALL_PATH}"
-mkdir -p build && cd "$_" || exit
+mkdir -p "${BLAZE_TENSOR_INSTALL_PREFIX}"
+
+# mkdir -p build && cd "$_" || exit
 
 # check gcc version starting from 9 on to 4
 version_array=($(seq 11 -1 4))
@@ -27,5 +30,16 @@ if [ -z "${CXX}" ]; then
 	# CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
 fi
 
-cmake -DCMAKE_INSTALL_PREFIX="${BLAZE_TENSOR_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}" -Dblaze_DIR="${BLAZE_PATH}" ..
-make && make install
+# cmake -DCMAKE_INSTALL_PREFIX="${BLAZE_TENSOR_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}" -Dblaze_DIR="${BLAZE_PATH}" ..
+# make && make install
+
+cmake -B "${BLAZE_TENSOR_BUILD_DIR}" \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_CXX_COMPILER="${CXX}" \
+	-Dblaze_DIR="${BLAZE_PATH}" \
+	-S .
+cmake --build "${BLAZE_TENSOR_BUILD_DIR}"
+cmake --install "${BLAZE_TENSOR_BUILD_DIR}" --prefix "${BLAZE_TENSOR_INSTALL_PREFIX}"
+
+unset BLAZE_TENSOR_BUILD_DIR
+unset BLAZE_TENSOR_INSTALL_PREFIX
