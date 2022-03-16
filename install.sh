@@ -60,6 +60,7 @@ setup_library "blaze" "https://bitbucket.org/blaze-lib/blaze.git"
 setup_library "blaze_tensor" "https://github.com/STEllAR-GROUP/blaze_tensor.git"
 setup_library "brigand" "https://github.com/edouarda/brigand.git"
 setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
+setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
@@ -75,6 +76,9 @@ if [ ! -v BRIGAND_ROOT ]; then
 fi
 if [ ! -v cxxopts_DIR ]; then
 	echo "export cxxopts_DIR='${INSTALL_PATH}'" >>~/.localrc
+fi
+if [ ! -v YAMLCPP_ROOT ]; then
+	echo "export YAMLCPP_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
