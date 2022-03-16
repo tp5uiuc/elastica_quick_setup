@@ -35,5 +35,7 @@ cmake -B "${BLAZE_BUILD_DIR}" \
 cmake --build "${BLAZE_BUILD_DIR}"
 cmake --install "${BLAZE_BUILD_DIR}" --prefix "${BLAZE_INSTALL_PREFIX}"
 
+unset _CXX_
+unset -f elastica_detect_compiler
 unset BLAZE_BUILD_DIR
 unset BLAZE_INSTALL_PREFIX
