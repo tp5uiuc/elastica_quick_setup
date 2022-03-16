@@ -41,6 +41,7 @@ function setup_library() {
 	local name=$1
 	local repo=$2
 	local script_name="${3:-"build_${name}"}.sh"
+	local detection_script_name="elastica_detect_compiler.sh"
 
 	echo "Building ${name}"
 	local repo_path="${DOWNLOAD_PATH}/${name}/"
@@ -51,7 +52,7 @@ function setup_library() {
 		git clone --depth 1 "${repo}" "${repo_path}" || fail "Could not clone ${name}"
 	fi
 	cp "${SCRIPT_DIR}/detail/${script_name}" "${repo_path}" && cd "${repo_path}" || exit
-	cp "${SCRIPT_DIR}/detail/detect_compiler.sh" "${repo_path}" && cd "${repo_path}" || exit
+	cp "${SCRIPT_DIR}/detail/${detection_script_name}" "${repo_path}" && cd "${repo_path}" || exit
 	source "${script_name}" "${INSTALL_PATH}" || fail "Could not build ${name}"
 }
 
