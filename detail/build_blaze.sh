@@ -6,7 +6,7 @@ BLAZE_INSTALL_PREFIX=${1:-"${HOME}/Desktop/third_party_installed"}
 mkdir -p "${BLAZE_INSTALL_PREFIX}"
 
 _CXX_="garbage"
-source "detect_compiler.sh" # populates _CXX_
+source "./elastica_detect_compiler.sh" # populates _CXX_
 elastica_detect_compiler
 
 # >3.14
