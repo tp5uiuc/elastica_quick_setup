@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-function detect_compiler() {
+function elastica_detect_compiler() {
 	# check gcc version starting from 9 on to 4
 	local version_array=($(seq 11 -1 4))
 	local CXX_ver_arr=("${version_array[@]/#/g++-}")
