@@ -13,14 +13,14 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.bash <options>
-
+	
 	options and explanations
 	---------------------------
 	  help : Print this help message
-
+	
 	  dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-
+	
 	  installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
 EOF
@@ -51,6 +51,7 @@ function setup_library() {
 		git clone --depth 1 "${repo}" "${repo_path}" || fail "Could not clone ${name}"
 	fi
 	cp "${SCRIPT_DIR}/detail/${script_name}" "${repo_path}" && cd "${repo_path}" || exit
+	cp "${SCRIPT_DIR}/detail/detect_compiler.sh" "${repo_path}" && cd "${repo_path}" || exit
 	source "${script_name}" "${INSTALL_PATH}" || fail "Could not build ${name}"
 }
 
