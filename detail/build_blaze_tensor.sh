@@ -30,9 +30,7 @@ if [ -z "${CXX}" ]; then
 	# CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
 fi
 
-# cmake -DCMAKE_INSTALL_PREFIX="${BLAZE_TENSOR_INSTALL_PATH}" -DCMAKE_CXX_COMPILER="${CXX}" -Dblaze_DIR="${BLAZE_PATH}" ..
-# make && make install
-
+# Requires >3.14
 cmake -B "${BLAZE_TENSOR_BUILD_DIR}" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_CXX_COMPILER="${CXX}" \

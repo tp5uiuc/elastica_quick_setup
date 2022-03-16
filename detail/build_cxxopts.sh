@@ -5,7 +5,6 @@ CXXOPTS_BUILD_DIR="build"
 CXXOPTS_INSTALL_PREFIX=${1:-"${HOME}/Desktop/third_party_installed"}
 
 mkdir -p "${CXXOPTS_INSTALL_PREFIX}"
-# mkdir -p build && cd "$_" || exit
 
 # check gcc version starting from 9 on to 4
 version_array=($(seq 9 -1 4))
@@ -28,10 +27,7 @@ if [ -z "${CXX}" ]; then
 	# CXX="/usr/local/Cellar/gcc/8.2.0/bin/g++-8"
 fi
 
-# cmake .. -DCMAKE_INSTALL_PREFIX="${CXXOPTS_INSTALL_PREFIX}" -DCMAKE_CXX_COMPILER="${CXX}" -DCXXOPTS_BUILD_EXAMPLES=OFF -DCXXOPTS_BUILD_TESTS=OFF
-# # make standalone
-# make install
-
+# Requires >3.14
 cmake -B "${CXXOPTS_BUILD_DIR}" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_CXX_COMPILER="${CXX}" \
