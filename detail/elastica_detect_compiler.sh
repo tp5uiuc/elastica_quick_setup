@@ -1,11 +1,5 @@
 #!/usr/bin/env sh
 
-# BRIGAND automatically installs in the brigand subdirectory
-BRIGAND_BUILD_DIR="build"
-BRIGAND_INSTALL_PREFIX=${1:-"${HOME}/Desktop/third_party_installed"}
-
-mkdir -p "${BRIGAND_INSTALL_PREFIX}"
-
 function elastica_detect_compiler() {
 	# check gcc version starting from 9 on to 4
 	local version_array=($(seq 11 -1 4))
@@ -23,18 +17,3 @@ function elastica_detect_compiler() {
 		_CXX_="g++"
 	fi
 }
-elastica_detect_compiler
-
-# Requires >3.14
-cmake -B "${BRIGAND_BUILD_DIR}" \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_CXX_COMPILER="${_CXX_}" \
-	-DBUILD_TESTING=OFF \
-	-S .
-cmake --build "${BRIGAND_BUILD_DIR}"
-cmake --install "${BRIGAND_BUILD_DIR}" --prefix "${BRIGAND_INSTALL_PREFIX}"
-
-unset _CXX_
-unset -f elastica_detect_compiler
-unset BRIGAND_BUILD_DIR
-unset BRIGAND_INSTALL_PREFIX

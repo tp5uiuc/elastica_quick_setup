@@ -13,14 +13,14 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.bash <options>
-
+	
 	options and explanations
 	---------------------------
 	  help : Print this help message
-
+	
 	  dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-
+	
 	  installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
 EOF
@@ -41,6 +41,7 @@ function setup_library() {
 	local name=$1
 	local repo=$2
 	local script_name="${3:-"build_${name}"}.sh"
+	local detection_script_name="elastica_detect_compiler.sh"
 
 	echo "Building ${name}"
 	local repo_path="${DOWNLOAD_PATH}/${name}/"
@@ -51,6 +52,7 @@ function setup_library() {
 		git clone --depth 1 "${repo}" "${repo_path}" || fail "Could not clone ${name}"
 	fi
 	cp "${SCRIPT_DIR}/detail/${script_name}" "${repo_path}" && cd "${repo_path}" || exit
+	cp "${SCRIPT_DIR}/detail/${detection_script_name}" "${repo_path}" && cd "${repo_path}" || exit
 	source "${script_name}" "${INSTALL_PATH}" || fail "Could not build ${name}"
 }
 
@@ -58,6 +60,7 @@ setup_library "blaze" "https://bitbucket.org/blaze-lib/blaze.git"
 setup_library "blaze_tensor" "https://github.com/STEllAR-GROUP/blaze_tensor.git"
 setup_library "brigand" "https://github.com/edouarda/brigand.git"
 setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
+setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
@@ -73,6 +76,9 @@ if [ ! -v BRIGAND_ROOT ]; then
 fi
 if [ ! -v cxxopts_DIR ]; then
 	echo "export cxxopts_DIR='${INSTALL_PATH}'" >>~/.localrc
+fi
+if [ ! -v YAMLCPP_ROOT ]; then
+	echo "export YAMLCPP_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
