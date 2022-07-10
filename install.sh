@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-start_dir=`pwd`
+pushd $(pwd)
 
 function fail() {
 	printf '%s\n' "$1" >&2 ## Send message to stderr.
@@ -15,14 +15,14 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.bash <options>
-	
+
 	options and explanations
 	---------------------------
 	  help : Print this help message
-	
+
 	  dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-	
+
 	  installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
 EOF
@@ -104,4 +104,4 @@ unset SCRIPT_DIR
 unset INSTALL_PATH
 unset DOWNLOAD_PATH
 
-cd $start_dir
+popd
