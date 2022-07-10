@@ -79,8 +79,9 @@ fi
 if [ ! -v cxxopts_DIR ]; then
 	echo "export cxxopts_DIR='${INSTALL_PATH}'" >>~/.localrc
 fi
-if [ ! -v YAMLCPP_ROOT ]; then
-	echo "export YAMLCPP_ROOT='${INSTALL_PATH}'" >>~/.localrc
+# This will add to previously installed quicksetup profiles as well
+if [ ! -v YamlCpp_ROOT ]; then
+	echo "export YamlCpp_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
