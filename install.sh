@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+pushd $(pwd)
+
 function fail() {
 	printf '%s\n' "$1" >&2 ## Send message to stderr.
 	exit "${2-1}"          ## Return a code specified by $2, or 1 by default.
@@ -101,3 +103,5 @@ unset -f setup_library
 unset SCRIPT_DIR
 unset INSTALL_PATH
 unset DOWNLOAD_PATH
+
+popd
