@@ -13,14 +13,14 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.bash <options>
-	
+
 	options and explanations
 	---------------------------
 	  help : Print this help message
-	
+
 	  dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-	
+
 	  installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
 EOF
@@ -77,8 +77,9 @@ fi
 if [ ! -v cxxopts_DIR ]; then
 	echo "export cxxopts_DIR='${INSTALL_PATH}'" >>~/.localrc
 fi
-if [ ! -v YAMLCPP_ROOT ]; then
-	echo "export YAMLCPP_ROOT='${INSTALL_PATH}'" >>~/.localrc
+# This will add to previously installed quicksetup profiles as well
+if [ ! -v YamlCpp_ROOT ]; then
+	echo "export YamlCpp_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
