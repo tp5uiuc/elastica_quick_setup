@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-pushd $(pwd)
+pushd "$(pwd)" || exit
 
 function fail() {
 	printf '%s\n' "$1" >&2 ## Send message to stderr.
@@ -14,17 +14,20 @@ fi
 read -rd '' globalhelp <<-EOF
 	usage
 	-----
-	./install.bash <options>
+	./install.sh [-d dpath] [-i ipath] [-c compiler]
 
 	options and explanations
 	---------------------------
 	  help : Print this help message
 
-	  dpath : Path to download source of libraries (created if it does not exist).
+	  d dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
 
-	  installpath : Path to install libraries (created if it does not exist).
+	  i installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
+
+	  c compiler : C++ compiler to build/install libraries.
+	          If not provided, the best known option will be chosen.
 EOF
 
 if [[ $1 =~ ^([hH][eE][lL][pP]|[hH])$ ]]; then
@@ -32,29 +35,54 @@ if [[ $1 =~ ^([hH][eE][lL][pP]|[hH])$ ]]; then
 	exit 0
 fi
 
+while [ $# -gt 0 ]; do
+	case "$1" in
+	-d | -dpath | --dpath)
+		DOWNLOAD_PATH="$2"
+		;;
+	-i | -ipath | --ipath)
+		INSTALL_PATH="$2"
+		;;
+	-c | -compiler)
+		GLOBAL_CXX_COMPILER="$2"
+		;;
+	-h | -help | --help)
+		echo "${globalhelp}"
+		exit 0
+		;;
+	*)
+		printf "* install: Invalid option encountered, see usage below*\n"
+		echo "${globalhelp}"
+		exit 1
+		;;
+	esac
+	shift
+	shift
+done
+
 function _elastica_detect_compiler() {
-  # check gcc version starting from 9 on to 4
-  local version_array=($(seq 11 -1 4))
-  local CXX_ver_arr=("${version_array[@]/#/g++-}")
-  local CC_ver_arr=("${version_array[@]/#/g++-}")
-  # Try and detect GNU g++ from the shell, if not use default CC
-  for cxx_ver in "${CXX_ver_arr[@]}"; do
-	  if command -v "${cxx_ver}" >/dev/null 2>&1 && "${cxx_ver}" --version | grep -q '[Gg][Cc][Cc]'; then
-		_CXX_="${cxx_ver}"
-		break
-	  fi
-  done
-  # Check if not set, else set it
-  if [ -z "${_CXX_}" ] && g++ --version; then
-	_CXX_="g++"
-  fi
+	# check gcc version starting from 9 on to 4
+	local version_array=($(seq 11 -1 4))
+	local CXX_ver_arr=("${version_array[@]/#/g++-}")
+	local CC_ver_arr=("${version_array[@]/#/g++-}")
+	# Try and detect GNU g++ from the shell, if not use default CC
+	for cxx_ver in "${CXX_ver_arr[@]}"; do
+		if command -v "${cxx_ver}" >/dev/null 2>&1 && "${cxx_ver}" --version | grep -q '[Gg][Cc][Cc]'; then
+			_CXX_="${cxx_ver}"
+			break
+		fi
+	done
+	# Check if not set, else set it
+	if [ -z "${_CXX_}" ] && g++ --version; then
+		_CXX_="g++"
+	fi
 }
 _elastica_detect_compiler
 
 # Path to download header only libraries
-DOWNLOAD_PATH=${1:-"${HOME}/Desktop/third_party"}
-INSTALL_PATH=${2:-"${HOME}/Desktop/third_party_installed"}
-GLOBAL_CXX_COMPILER=${3:-"${_CXX_}"}
+DOWNLOAD_PATH=${DOWNLOAD_PATH:-"${HOME}/Desktop/third_party"}
+INSTALL_PATH=${INSTALL_PATH:-"${HOME}/Desktop/third_party_installed"}
+GLOBAL_CXX_COMPILER=${GLOBAL_CXX_COMPILER:-"${_CXX_}"}
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 mkdir -p "${DOWNLOAD_PATH}" && cd "${DOWNLOAD_PATH}" || exit
@@ -112,9 +140,9 @@ echo ""
 echo "${finalmessage}"
 echo ""
 
-if [ ! -z "${ZSH_VERSION}" ]; then
+if [ -n "${ZSH_VERSION}" ]; then
 	echo "echo \"[ -f ~/.localrc ] && . ~/.localrc\" >> ~/.zshrc"
-elif [ ! -z "${BASH_VERSION}" ]; then
+elif [ -n "${BASH_VERSION}" ]; then
 	echo "echo \"[ -f ~/.localrc -a -r ~/.localrc ] && . ~/.localrc\" >> ~/.bashrc"
 else
 	fail "shell not recognized, please source localrc manually"
@@ -125,5 +153,7 @@ unset -f setup_library
 unset SCRIPT_DIR
 unset INSTALL_PATH
 unset DOWNLOAD_PATH
+unset GLOBAL_CXX_COMPILER
+unset _CXX_
 
-popd
+popd || exit
