@@ -15,14 +15,14 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.bash <options>
-	
+
 	options and explanations
 	---------------------------
 	  help : Print this help message
-	
+
 	  dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-	
+
 	  installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
 EOF
@@ -32,9 +32,29 @@ if [[ $1 =~ ^([hH][eE][lL][pP]|[hH])$ ]]; then
 	exit 0
 fi
 
+function _elastica_detect_compiler() {
+  # check gcc version starting from 9 on to 4
+  local version_array=($(seq 11 -1 4))
+  local CXX_ver_arr=("${version_array[@]/#/g++-}")
+  local CC_ver_arr=("${version_array[@]/#/g++-}")
+  # Try and detect GNU g++ from the shell, if not use default CC
+  for cxx_ver in "${CXX_ver_arr[@]}"; do
+	  if command -v "${cxx_ver}" >/dev/null 2>&1 && "${cxx_ver}" --version | grep -q '[Gg][Cc][Cc]'; then
+		_CXX_="${cxx_ver}"
+		break
+	  fi
+  done
+  # Check if not set, else set it
+  if [ -z "${_CXX_}" ] && g++ --version; then
+	_CXX_="g++"
+  fi
+}
+_elastica_detect_compiler
+
 # Path to download header only libraries
 DOWNLOAD_PATH=${1:-"${HOME}/Desktop/third_party"}
 INSTALL_PATH=${2:-"${HOME}/Desktop/third_party_installed"}
+GLOBAL_CXX_COMPILER=${3:-"${_CXX_}"}
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 mkdir -p "${DOWNLOAD_PATH}" && cd "${DOWNLOAD_PATH}" || exit
@@ -55,7 +75,7 @@ function setup_library() {
 	fi
 	cp "${SCRIPT_DIR}/detail/${script_name}" "${repo_path}" && cd "${repo_path}" || exit
 	cp "${SCRIPT_DIR}/detail/${detection_script_name}" "${repo_path}" && cd "${repo_path}" || exit
-	source "${script_name}" "${INSTALL_PATH}" || fail "Could not build ${name}"
+	source "${script_name}" "${INSTALL_PATH}" "${GLOBAL_CXX_COMPILER}" || fail "Could not build ${name}"
 }
 
 setup_library "blaze" "https://bitbucket.org/blaze-lib/blaze.git"
@@ -100,6 +120,7 @@ else
 	fail "shell not recognized, please source localrc manually"
 fi
 
+unset -f _elastica_detect_compiler
 unset -f setup_library
 unset SCRIPT_DIR
 unset INSTALL_PATH

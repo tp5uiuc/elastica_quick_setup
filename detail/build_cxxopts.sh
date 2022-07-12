@@ -24,17 +24,19 @@ function elastica_detect_compiler() {
 	fi
 }
 elastica_detect_compiler
+_CXX_COMPILER=${2:-"${_CXX_}"}
 
 # Requires >3.14
 cmake -B "${CXXOPTS_BUILD_DIR}" \
 	-DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_CXX_COMPILER="${_CXX_}" \
+	-DCMAKE_CXX_COMPILER="${_CXX_COMPILER}" \
 	-DCXXOPTS_BUILD_EXAMPLES=OFF \
 	-DCXXOPTS_BUILD_TESTS=OFF \
 	-S .
 cmake --build "${CXXOPTS_BUILD_DIR}"
 cmake --install "${CXXOPTS_BUILD_DIR}" --prefix "${CXXOPTS_INSTALL_PREFIX}"
 
+unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler
 unset CXXOPTS_BUILD_DIR
