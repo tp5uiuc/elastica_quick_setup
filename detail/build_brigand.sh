@@ -24,16 +24,18 @@ function elastica_detect_compiler() {
 	fi
 }
 elastica_detect_compiler
+_CXX_COMPILER=${2:-"${_CXX_}"}
 
 # Requires >3.14
 cmake -B "${BRIGAND_BUILD_DIR}" \
 	-DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_CXX_COMPILER="${_CXX_}" \
+	-DCMAKE_CXX_COMPILER="${_CXX_COMPILER}" \
 	-DBUILD_TESTING=OFF \
 	-S .
 cmake --build "${BRIGAND_BUILD_DIR}"
 cmake --install "${BRIGAND_BUILD_DIR}" --prefix "${BRIGAND_INSTALL_PREFIX}"
 
+unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler
 unset BRIGAND_BUILD_DIR

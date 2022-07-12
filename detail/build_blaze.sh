@@ -23,18 +23,20 @@ function elastica_detect_compiler() {
 	fi
 }
 elastica_detect_compiler
+_CXX_COMPILER=${2:-"${_CXX_}"}
 
 # >3.14
 # -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
 cmake -B "${BLAZE_BUILD_DIR}" \
 	-DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_CXX_COMPILER="${_CXX_}" \
+	-DCMAKE_CXX_COMPILER="${_CXX_COMPILER}" \
 	-DBLAZE_SHARED_MEMORY_PARALLELIZATION=OFF \
 	-DUSE_LAPACK=OFF \
 	-S .
 cmake --build "${BLAZE_BUILD_DIR}"
 cmake --install "${BLAZE_BUILD_DIR}" --prefix "${BLAZE_INSTALL_PREFIX}"
 
+unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler
 unset BLAZE_BUILD_DIR

@@ -23,14 +23,17 @@ bash install.sh help # (or zsh install.sh help)
 which prints the following message
 > usage
 > -----
-> ./install.bash <options>
+> ./install.sh [-d dpath] [-i ipath] [-c compiler]
 >
 > options and explanations
 > ---------------------------
 >   help : Print this help message
 >
->   dpath : Path to download source of libraries (created if it does not exist).
+>   d dpath : Path to download source of libraries (created if it does not exist).
 >           Defaults to ${HOME}/Desktop/third_party/
 >
->   installpath : Path to install libraries (created if it does not exist).
+>   i installpath : Path to install libraries (created if it does not exist).
 >           Defaults to ${HOME}/Desktop/third_party_installed/
+>
+>   c compiler : C++ compiler to build/install libraries.
+>           If not provided, the best known option will be chosen.
