@@ -15,17 +15,17 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.sh [-d dpath] [-i ipath] [-c compiler]
-
+	
 	options and explanations
 	---------------------------
 	  help : Print this help message
-
+	
 	  d dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-
+	
 	  i installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
-
+	
 	  c compiler : C++ compiler to build/install libraries.
 	          If not provided, the best known option will be chosen.
 EOF
@@ -111,6 +111,7 @@ setup_library "blaze_tensor" "https://github.com/STEllAR-GROUP/blaze_tensor.git"
 setup_library "brigand" "https://github.com/edouarda/brigand.git"
 setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
 setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
+setup_library "HighFive" "https://github.com/BlueBrain/HighFive"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
@@ -130,6 +131,10 @@ fi
 # This will add to previously installed quicksetup profiles as well
 if [ ! -v YamlCpp_ROOT ]; then
 	echo "export YamlCpp_ROOT='${INSTALL_PATH}'" >>~/.localrc
+fi
+# We have a FindHighFive.cmake that is case-insensitive
+if [ ! -v HighFive_ROOT ]; then
+	echo "export HighFive_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
