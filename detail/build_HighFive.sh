@@ -38,6 +38,7 @@ if command -v h5cc >/dev/null 2>&1; then # h5cc exists, so good chance that Cmak
 		-D HIGHFIVE_USE_OPENCV=OFF \
 		-D HIGHFIVE_USE_XTENSOR=OFF \
 		-D HIGHFIVE_EXAMPLES=OFF \
+		-D HIGHFIVE_UNIT_TESTS=OFF \
 		-D HIGHFIVE_PARALLEL_HDF5=OFF \
 		-D HIGHFIVE_BUILD_DOCS=OFF \
 		-S .
