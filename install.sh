@@ -112,7 +112,7 @@ setup_library "brigand" "https://github.com/edouarda/brigand.git"
 setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
 setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
 setup_library "HighFive" "https://github.com/BlueBrain/HighFive"
-setup_library "TBB" "https://github.com/oneapi-src/oneTBB.git"
+setup_library "tbb" "https://github.com/oneapi-src/oneTBB.git"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
