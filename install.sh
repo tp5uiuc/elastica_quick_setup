@@ -15,17 +15,17 @@ read -rd '' globalhelp <<-EOF
 	usage
 	-----
 	./install.sh [-d dpath] [-i ipath] [-c compiler]
-	
+
 	options and explanations
 	---------------------------
 	  help : Print this help message
-	
+
 	  d dpath : Path to download source of libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party/
-	
+
 	  i installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
-	
+
 	  c compiler : C++ compiler to build/install libraries.
 	          If not provided, the best known option will be chosen.
 EOF
@@ -62,7 +62,7 @@ done
 
 function _elastica_detect_compiler() {
 	# check gcc version starting from 9 on to 4
-	local version_array=($(seq 11 -1 4))
+	local version_array=("$(seq 11 -1 4)")
 	local CXX_ver_arr=("${version_array[@]/#/g++-}")
 	local CC_ver_arr=("${version_array[@]/#/g++-}")
 	# Try and detect GNU g++ from the shell, if not use default CC
@@ -112,6 +112,7 @@ setup_library "brigand" "https://github.com/edouarda/brigand.git"
 setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
 setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
 setup_library "HighFive" "https://github.com/BlueBrain/HighFive"
+setup_library "TBB" "https://github.com/oneapi-src/oneTBB.git"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
@@ -135,6 +136,9 @@ fi
 # We have a FindHighFive.cmake that is case-insensitive
 if [ ! -v HighFive_ROOT ]; then
 	echo "export HighFive_ROOT='${INSTALL_PATH}'" >>~/.localrc
+fi
+if [ ! -v TBB_ROOT ]; then
+	echo "export TBB_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
