@@ -1,0 +1,58 @@
+diff --git blaze_tensor/math/expressions/DTensTransposer.h blaze_tensor/math/expressions/DTensTransposer.h
+index 36785d8..58e559b 100644
+--- blaze_tensor/math/expressions/DTensTransposer.h
++++ blaze_tensor/math/expressions/DTensTransposer.h
+@@ -67,6 +67,10 @@ namespace blaze {
+ //
+ //=================================================================================================
+ 
++#ifndef ELASTICA_PATCH_DTENS_TRANSPOSER
++#define ELASTICA_PATCH_DTENS_TRANSPOSER 1
++#endif
++
+ //*************************************************************************************************
+ /*!\brief Expression object for the transposition of a dense tensor.
+ // \ingroup dense_tensor_expression
+@@ -76,26 +80,26 @@ namespace blaze {
+ template< typename MT,        // Type of the dense tensor
+           size_t... CTAs >    // Compile time arguments
+ class DTensTransposer
+-   : public DenseTensor< DTensTransposer<MT> >
++   : public DenseTensor< DTensTransposer<MT, CTAs...> >
+    , public DTensTransExprData<CTAs...>
+ {
+  public:
+    //**Type definitions****************************************************************************
+-   using DataType       = DTensTransExprData<CTAs...>;  //!< The type of the DTensTransExprData base class.
+-   using This           = DTensTransposer<MT>;       //!< Type of this DTensTransposer instance.
+-   using ResultType     = TransposeType_t<MT>;       //!< Result type for expression template evaluations.
+-   using OppositeType   = OppositeType_t<MT>;        //!< Result type with opposite storage order for expression template evaluations.
+-   using TransposeType  = ResultType_t<MT>;          //!< Transpose type for expression template evaluations.
+-   using ElementType    = ElementType_t<MT>;         //!< Type of the tensor elements.
+-   using SIMDType       = SIMDTrait_t<ElementType>;  //!< SIMD type of the tensor elements.
+-   using ReturnType     = ReturnType_t<MT>;          //!< Return type for expression template evaluations.
+-   using CompositeType  = const This&;               //!< Data type for composite expression templates.
+-   using Reference      = Reference_t<MT>;           //!< Reference to a non-constant tensor value.
+-   using ConstReference = ConstReference_t<MT>;      //!< Reference to a constant tensor value.
+-   using Pointer        = Pointer_t<MT>;             //!< Pointer to a non-constant tensor value.
+-   using ConstPointer   = ConstPointer_t<MT>;        //!< Pointer to a constant tensor value.
+-   using Iterator       = Iterator_t<MT>;            //!< Iterator over non-constant elements.
+-   using ConstIterator  = ConstIterator_t<MT>;       //!< Iterator over constant elements.
++   using DataType       = DTensTransExprData<CTAs...>;   //!< The type of the DTensTransExprData base class.
++   using This           = DTensTransposer<MT, CTAs...>;  //!< Type of this DTensTransposer instance.
++   using ResultType     = TransposeType_t<MT>;           //!< Result type for expression template evaluations.
++   using OppositeType   = OppositeType_t<MT>;            //!< Result type with opposite storage order for expression template evaluations.
++   using TransposeType  = ResultType_t<MT>;              //!< Transpose type for expression template evaluations.
++   using ElementType    = ElementType_t<MT>;             //!< Type of the tensor elements.
++   using SIMDType       = SIMDTrait_t<ElementType>;      //!< SIMD type of the tensor elements.
++   using ReturnType     = ReturnType_t<MT>;              //!< Return type for expression template evaluations.
++   using CompositeType  = const This&;                   //!< Data type for composite expression templates.
++   using Reference      = Reference_t<MT>;               //!< Reference to a non-constant tensor value.
++   using ConstReference = ConstReference_t<MT>;          //!< Reference to a constant tensor value.
++   using Pointer        = Pointer_t<MT>;                 //!< Pointer to a non-constant tensor value.
++   using ConstPointer   = ConstPointer_t<MT>;            //!< Pointer to a constant tensor value.
++   using Iterator       = Iterator_t<MT>;                //!< Iterator over non-constant elements.
++   using ConstIterator  = ConstIterator_t<MT>;           //!< Iterator over constant elements.
+    //**********************************************************************************************
+ 
+    //**Compilation flags***************************************************************************
