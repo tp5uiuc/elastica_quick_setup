@@ -103,7 +103,7 @@ function setup_library() {
 	fi
 	cp "${SCRIPT_DIR}/detail/${script_name}" "${repo_path}" || fail "Could not copy script"
 	# Copy all patch files
-	cp "${SCRIPT_DIR}/detail/*.patch" "${repo_path}" || fail "Could not copy patches"
+	cp ${SCRIPT_DIR}/detail/*.patch "${repo_path}" || fail "Could not copy patches"
 	cp "${SCRIPT_DIR}/detail/${detection_script_name}" "${repo_path}" && cd "${repo_path}" || exit
 	source "${script_name}" "${INSTALL_PATH}" "${GLOBAL_CXX_COMPILER}" || fail "Could not build ${name}"
 }
