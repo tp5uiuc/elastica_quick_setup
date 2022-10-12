@@ -28,6 +28,13 @@ elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
 
 # Requires >3.14
+function fail() {
+	printf '%s\n' "$1" >&2 ## Send message to stderr.
+	exit "${2-1}"          ## Return a code specified by $2, or 1 by default.
+}
+
+# Apply patches before building the project
+patch -p0 < dtenstransposer.patch || fail "Could not apply patch"
 cmake -B "${BLAZE_TENSOR_BUILD_DIR}" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_CXX_COMPILER="${_CXX_COMPILER}" \
