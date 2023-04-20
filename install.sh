@@ -115,6 +115,7 @@ setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
 setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
 setup_library "HighFive" "https://github.com/BlueBrain/HighFive"
 setup_library "tbb" "https://github.com/oneapi-src/oneTBB.git"
+setup_library "spline" "https://github.com/tp5uiuc/spline.git"
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
@@ -141,6 +142,9 @@ if [ ! -v HighFive_ROOT ]; then
 fi
 if [ ! -v TBB_ROOT ]; then
 	echo "export TBB_ROOT='${INSTALL_PATH}'" >>~/.localrc
+fi
+if [ ! -v SPLINE_ROOT ]; then
+	echo "export SPLINE_ROOT='${INSTALL_PATH}'" >>~/.localrc
 fi
 
 read -rd '' finalmessage <<-EOF
