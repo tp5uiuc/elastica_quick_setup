@@ -25,6 +25,11 @@ function elastica_detect_compiler() {
 elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
 
+# The last commit of blaze seems faulty and leads to segfault
+# within elastica++. We revert that here just to be sure.
+git fetch --unshallow # undo depth 1
+git checkout cb472ee  # Declare the 'rows()', 'columns()', 'spacing()', and 'capacity()' functions of all adapters as 'constexpr'
+
 # >3.14
 # -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
 cmake -B "${BLAZE_BUILD_DIR}" \
