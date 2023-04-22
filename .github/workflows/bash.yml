@@ -15,7 +15,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build_default:
     name: Default arguments
     # The type of runner that the job will run on
@@ -65,6 +64,52 @@ jobs:
         run: "bash ${GITHUB_WORKSPACE}/install.sh -d ${HOME}/code/dpath -i ${HOME}/code/ipath -c g++"
         shell: bash
 
+  build_optional:
+    name: Optional libraries
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Setup GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 9
+          platform: x64
+
+      # Runs a single command using the runners shell
+      - name: Check installation
+        run: "bash ${GITHUB_WORKSPACE}/install.sh --optional"
+        shell: bash
+
+  build_only_optional:
+    name: Only optional libraries
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Setup GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 9
+          platform: x64
+
+      # Runs a single command using the runners shell
+      - name: Check installation
+        run: "bash ${GITHUB_WORKSPACE}/install.sh --only-optional"
+        shell: bash
+
   build_h5:
       name: Build with hdf5 support
       # The type of runner that the job will run on
@@ -89,5 +134,5 @@ jobs:
             sudo apt install --no-install-recommends libhdf5-dev
 
         - name: Check installation
-          run: "bash ${GITHUB_WORKSPACE}/install.sh"
+          run: "bash ${GITHUB_WORKSPACE}/install.sh --only-optional" # HDF5 is optional.
           shell: bash
