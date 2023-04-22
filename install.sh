@@ -14,10 +14,10 @@ fi
 read -rd '' globalhelp <<-EOF
 	usage
 	-----
-	./install.sh [-d dpath] [-i ipath] [-c compiler]
+	./install.sh [-d dpath] [-i ipath] [-c compiler] [--optional] [--only-optional]
 
 	options and explanations
-	---------------------------
+	------------------------
 	  help : Print this help message
 
 	  d dpath : Path to download source of libraries (created if it does not exist).
@@ -28,12 +28,21 @@ read -rd '' globalhelp <<-EOF
 
 	  c compiler : C++ compiler to build/install libraries.
 	          If not provided, the best known option will be chosen.
+
+	  optional : Installs the optional libraries as well. By default, only required
+	             libraries are installed.
+
+	  only-optional : Installs only the optional libraries, skipping the required
+	                 libraries.
 EOF
 
 if [[ $1 =~ ^([hH][eE][lL][pP]|[hH])$ ]]; then
 	echo "${globalhelp}"
 	exit 0
 fi
+
+INSTALL_OPTIONAL=false
+INSTALL_DEFAULT=true
 
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -49,6 +58,13 @@ while [ $# -gt 0 ]; do
 	-h | -help | --help)
 		echo "${globalhelp}"
 		exit 0
+		;;
+	--optional)
+		INSTALL_OPTIONAL=true
+		;;
+	--only-optional)
+		INSTALL_OPTIONAL=true
+		INSTALL_DEFAULT=false
 		;;
 	*)
 		printf "* install: Invalid option encountered, see usage below*\n"
@@ -103,19 +119,24 @@ function setup_library() {
 	fi
 	cp "${SCRIPT_DIR}/detail/${script_name}" "${repo_path}" || fail "Could not copy script"
 	# Copy all patch files
-	cp ${SCRIPT_DIR}/detail/*.patch "${repo_path}" || fail "Could not copy patches"
+	cp "${SCRIPT_DIR}"/detail/*.patch "${repo_path}" || fail "Could not copy patches"
 	cp "${SCRIPT_DIR}/detail/${detection_script_name}" "${repo_path}" && cd "${repo_path}" || exit
 	source "${script_name}" "${INSTALL_PATH}" "${GLOBAL_CXX_COMPILER}" || fail "Could not build ${name}"
 }
 
-setup_library "blaze" "https://bitbucket.org/blaze-lib/blaze.git"
-setup_library "blaze_tensor" "https://github.com/STEllAR-GROUP/blaze_tensor.git"
-setup_library "brigand" "https://github.com/edouarda/brigand.git"
-setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
-setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
-setup_library "HighFive" "https://github.com/BlueBrain/HighFive"
-setup_library "tbb" "https://github.com/oneapi-src/oneTBB.git"
-setup_library "spline" "https://github.com/tp5uiuc/spline.git"
+if [ "$INSTALL_DEFAULT" == true ]; then
+	setup_library "blaze" "https://bitbucket.org/blaze-lib/blaze.git"
+	setup_library "blaze_tensor" "https://github.com/STEllAR-GROUP/blaze_tensor.git"
+	setup_library "brigand" "https://github.com/edouarda/brigand.git"
+	setup_library "cxxopts" "https://github.com/jarro2783/cxxopts.git"
+	setup_library "yaml-cpp" "https://github.com/jbeder/yaml-cpp.git"
+fi
+
+if [ "$INSTALL_OPTIONAL" == true ]; then
+	setup_library "HighFive" "https://github.com/BlueBrain/HighFive"
+	setup_library "tbb" "https://github.com/oneapi-src/oneTBB.git"
+	setup_library "spline" "https://github.com/tp5uiuc/spline.git"
+fi
 
 touch ~/.localrc
 chmod u+rwx ~/.localrc
