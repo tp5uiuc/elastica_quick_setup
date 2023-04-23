@@ -25,6 +25,7 @@ function elastica_detect_compiler() {
 }
 elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
+_PARALLEL_ARG=${3:-"1"}
 
 # Requires >3.14
 cmake -B "${CXXOPTS_BUILD_DIR}" \
@@ -33,9 +34,10 @@ cmake -B "${CXXOPTS_BUILD_DIR}" \
 	-DCXXOPTS_BUILD_EXAMPLES=OFF \
 	-DCXXOPTS_BUILD_TESTS=OFF \
 	-S .
-cmake --build "${CXXOPTS_BUILD_DIR}"
+cmake --build "${CXXOPTS_BUILD_DIR}" --parallel "${_PARALLEL_ARG}"
 cmake --install "${CXXOPTS_BUILD_DIR}" --prefix "${CXXOPTS_INSTALL_PREFIX}"
 
+unset _PARALLEL_ARG
 unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler

@@ -25,6 +25,7 @@ function elastica_detect_compiler() {
 }
 elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
+_PARALLEL_ARG=${3:-"1"}
 
 # We need high-five to be found, else this steps error out. Rather than searching for the libraries which is harder,
 # we search for the compiler-wrapper here.
@@ -42,12 +43,14 @@ if command -v h5cc >/dev/null 2>&1; then # h5cc exists, so good chance that Cmak
 		-D HIGHFIVE_PARALLEL_HDF5=OFF \
 		-D HIGHFIVE_BUILD_DOCS=OFF \
 		-S .
-	# doesn't need to be parallel as its header only
-	cmake --build "${HIGHFIVE_BUILD_DIR}"
+	# doesn't need to be strictly parallel as its header only
+	cmake --build "${HIGHFIVE_BUILD_DIR}" --parallel "${_PARALLEL_ARG}"
 	cmake --install "${HIGHFIVE_BUILD_DIR}" --prefix "${HIGHFIVE_INSTALL_PREFIX}"
 else
 	echo "h5cc was not found. Chances are that HDF5 is not installed on your system, so the HighFive dependency will not be installed."
 fi
+
+unset _PARALLEL_ARG
 unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler

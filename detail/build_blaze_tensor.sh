@@ -26,6 +26,7 @@ function elastica_detect_compiler() {
 }
 elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
+_PARALLEL_ARG=${3:-"1"}
 
 # Requires >3.14
 function fail() {
@@ -34,15 +35,16 @@ function fail() {
 }
 
 # Apply patches before building the project
-patch -p0 < dtenstransposer.patch || fail "Could not apply patch"
+patch -p0 <dtenstransposer.patch || fail "Could not apply patch"
 cmake -B "${BLAZE_TENSOR_BUILD_DIR}" \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_CXX_COMPILER="${_CXX_COMPILER}" \
 	-Dblaze_DIR="${BLAZE_PATH}" \
 	-S .
-cmake --build "${BLAZE_TENSOR_BUILD_DIR}"
+cmake --build "${BLAZE_TENSOR_BUILD_DIR}" --parallel "${_PARALLEL_ARG}"
 cmake --install "${BLAZE_TENSOR_BUILD_DIR}" --prefix "${BLAZE_TENSOR_INSTALL_PREFIX}"
 
+unset _PARALLEL_ARG
 unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler

@@ -14,7 +14,7 @@ fi
 read -rd '' globalhelp <<-EOF
 	usage
 	-----
-	./install.sh [-d dpath] [-i ipath] [-c compiler] [--optional] [--only-optional]
+	./install.sh [-d dpath] [-i ipath] [-c compiler] [-j parallel] [--optional] [--only-optional]
 
 	options and explanations
 	------------------------
@@ -25,6 +25,8 @@ read -rd '' globalhelp <<-EOF
 
 	  i installpath : Path to install libraries (created if it does not exist).
 	          Defaults to ${HOME}/Desktop/third_party_installed/
+
+	  j parg : Number of parallel tasks to use for build. Defaults to 1.
 
 	  c compiler : C++ compiler to build/install libraries.
 	          If not provided, the best known option will be chosen.
@@ -43,6 +45,7 @@ fi
 
 INSTALL_OPTIONAL=false
 INSTALL_DEFAULT=true
+PARALLEL_ARG="1"
 
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -54,6 +57,9 @@ while [ $# -gt 0 ]; do
 		;;
 	-c | -compiler)
 		GLOBAL_CXX_COMPILER="$2"
+		;;
+	-j | --parallel)
+		PARALLEL_ARG="$2"
 		;;
 	-h | -help | --help)
 		echo "${globalhelp}"
@@ -121,7 +127,7 @@ function setup_library() {
 	# Copy all patch files
 	cp "${SCRIPT_DIR}"/detail/*.patch "${repo_path}" || fail "Could not copy patches"
 	cp "${SCRIPT_DIR}/detail/${detection_script_name}" "${repo_path}" && cd "${repo_path}" || exit
-	source "${script_name}" "${INSTALL_PATH}" "${GLOBAL_CXX_COMPILER}" || fail "Could not build ${name}"
+	source "${script_name}" "${INSTALL_PATH}" "${GLOBAL_CXX_COMPILER}" "${PARALLEL_ARG}" || fail "Could not build ${name}"
 }
 
 if [ "$INSTALL_DEFAULT" == true ]; then
