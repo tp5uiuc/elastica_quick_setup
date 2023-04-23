@@ -61,7 +61,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Check installation
-        run: "bash ${GITHUB_WORKSPACE}/install.sh -d ${HOME}/code/dpath -i ${HOME}/code/ipath -c g++"
+        run: "bash ${GITHUB_WORKSPACE}/install.sh -d ${HOME}/code/dpath -i ${HOME}/code/ipath -c g++ -j 2"
         shell: bash
 
   build_optional:

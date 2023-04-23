@@ -24,6 +24,7 @@ function elastica_detect_compiler() {
 }
 elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
+_PARALLEL_ARG=${3:-"1"}
 
 # >3.14
 # -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
@@ -35,9 +36,10 @@ cmake -B "${TBB_BUILD_DIR}" \
 	-DTBB4PY_BUILD=OFF \
 	-DBUILD_SHARED_LIBS=ON \
 	-S .
-cmake --build "${TBB_BUILD_DIR}"
+cmake --build "${TBB_BUILD_DIR}" --parallel "${_PARALLEL_ARG}"
 cmake --install "${TBB_BUILD_DIR}" --prefix "${TBB_INSTALL_PREFIX}"
 
+unset _PARALLEL_ARG
 unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler

@@ -24,6 +24,7 @@ function elastica_detect_compiler() {
 }
 elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
+_PARALLEL_ARG=${3:-"1"}
 
 # >3.14
 # -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
@@ -32,9 +33,10 @@ cmake -B "${YAML_CPP_BUILD_DIR}" \
 	-DCMAKE_CXX_COMPILER="${_CXX_COMPILER}" \
 	-DYAML_BUILD_SHARED_LIBS=on \
 	-S .
-cmake --build "${YAML_CPP_BUILD_DIR}"
+cmake --build "${YAML_CPP_BUILD_DIR}" --parallel "${_PARALLEL_ARG}"
 cmake --install "${YAML_CPP_BUILD_DIR}" --prefix "${YAML_CPP_INSTALL_PREFIX}"
 
+unset _PARALLEL_ARG
 unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler

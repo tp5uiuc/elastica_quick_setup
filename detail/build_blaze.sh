@@ -24,6 +24,7 @@ function elastica_detect_compiler() {
 }
 elastica_detect_compiler
 _CXX_COMPILER=${2:-"${_CXX_}"}
+_PARALLEL_ARG=${3:-"1"}
 
 # The last commit of blaze seems faulty and leads to segfault
 # within elastica++. We revert that here just to be sure.
@@ -38,9 +39,10 @@ cmake -B "${BLAZE_BUILD_DIR}" \
 	-DBLAZE_SHARED_MEMORY_PARALLELIZATION=OFF \
 	-DUSE_LAPACK=OFF \
 	-S .
-cmake --build "${BLAZE_BUILD_DIR}"
+cmake --build "${BLAZE_BUILD_DIR}" --parallel "${_PARALLEL_ARG}"
 cmake --install "${BLAZE_BUILD_DIR}" --prefix "${BLAZE_INSTALL_PREFIX}"
 
+unset _PARALLEL_ARG
 unset _CXX_COMPILER
 unset _CXX_
 unset -f elastica_detect_compiler
